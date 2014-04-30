@@ -6,11 +6,13 @@
 
 package com.se.web;
 
+import com.se.entidades.MateriaPrima;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 /**
  *
@@ -27,6 +29,13 @@ public class HolaControlador {
     public String ingresar(@RequestParam String nombre,Model modelo){
         modelo.addAttribute("nombre", nombre);
         return "ingreso";
+    }
+    
+    @RequestMapping(value = "/respuesta",produces = "application/json")
+    @ResponseBody
+    public MateriaPrima responder(){
+        MateriaPrima materiaPrima = new MateriaPrima(1, "Descripcion");
+        return materiaPrima;
     }
     
 }
