@@ -15,6 +15,8 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
@@ -28,26 +30,32 @@ import javax.xml.bind.annotation.XmlTransient;
  * @author Willian
  */
 @Entity
-@Table(name = "unidad_medida")
+@Table(name = "producto")
 @XmlRootElement
 @NamedQueries({
-    @NamedQuery(name = "UnidadMedida.findAll", query = "SELECT u FROM UnidadMedida u")})
-public class UnidadMedida implements Serializable {
+    @NamedQuery(name = "Producto.findAll", query = "SELECT p FROM Producto p")})
+public class Producto implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
-    @Column(name = "idunidad_medida")
+    @Column(name = "idproducto")
     private Integer id;
     @Size(max = 45)
     @Column(name = "descripcion")
     private String descripcion;
 
-    public UnidadMedida() {
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "producto")
+    private List<FormulaProducto> formulas;
+    @JoinColumn(name = "idunidad_medida", referencedColumnName = "idunidad_medida")
+    @ManyToOne(optional = false)
+    private UnidadMedida idunidadMedida;
+
+    public Producto() {
     }
 
-    public UnidadMedida(Integer idunidadMedida) {
-        this.id = idunidadMedida;
+    public Producto(Integer idproducto) {
+        this.id = idproducto;
     }
 
     public Integer getId() {
@@ -68,6 +76,23 @@ public class UnidadMedida implements Serializable {
 
 
 
+    @XmlTransient
+    public List<FormulaProducto> getFormulas() {
+        return formulas;
+    }
+
+    public void setFormulas(List<FormulaProducto> formulas) {
+        this.formulas = formulas;
+    }
+
+    public UnidadMedida getIdunidadMedida() {
+        return idunidadMedida;
+    }
+
+    public void setIdunidadMedida(UnidadMedida idunidadMedida) {
+        this.idunidadMedida = idunidadMedida;
+    }
+
     @Override
     public int hashCode() {
         int hash = 0;
@@ -78,10 +103,10 @@ public class UnidadMedida implements Serializable {
     @Override
     public boolean equals(Object object) {
         // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof UnidadMedida)) {
+        if (!(object instanceof Producto)) {
             return false;
         }
-        UnidadMedida other = (UnidadMedida) object;
+        Producto other = (Producto) object;
         if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
             return false;
         }
@@ -90,7 +115,7 @@ public class UnidadMedida implements Serializable {
 
     @Override
     public String toString() {
-        return "com.se.entidades.UnidadMedida[ idunidadMedida=" + id + " ]";
+        return "com.se.entidades.Producto[ idproducto=" + id + " ]";
     }
     
 }

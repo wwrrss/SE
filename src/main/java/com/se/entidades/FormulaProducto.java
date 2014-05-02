@@ -15,11 +15,12 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
-import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
@@ -28,26 +29,28 @@ import javax.xml.bind.annotation.XmlTransient;
  * @author Willian
  */
 @Entity
-@Table(name = "unidad_medida")
+@Table(name = "formula_producto")
 @XmlRootElement
 @NamedQueries({
-    @NamedQuery(name = "UnidadMedida.findAll", query = "SELECT u FROM UnidadMedida u")})
-public class UnidadMedida implements Serializable {
+    @NamedQuery(name = "FormulaProducto.findAll", query = "SELECT f FROM FormulaProducto f")})
+public class FormulaProducto implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
-    @Column(name = "idunidad_medida")
+    @Column(name = "idformula_producto")
     private Integer id;
-    @Size(max = 45)
-    @Column(name = "descripcion")
-    private String descripcion;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "formula")
+    private List<FormulaMateria> materias;
+    @JoinColumn(name = "id_producto", referencedColumnName = "idproducto")
+    @ManyToOne(optional = false)
+    private Producto producto;
 
-    public UnidadMedida() {
+    public FormulaProducto() {
     }
 
-    public UnidadMedida(Integer idunidadMedida) {
-        this.id = idunidadMedida;
+    public FormulaProducto(Integer idformulaProducto) {
+        this.id = idformulaProducto;
     }
 
     public Integer getId() {
@@ -58,15 +61,22 @@ public class UnidadMedida implements Serializable {
         this.id = id;
     }
 
-    public String getDescripcion() {
-        return descripcion;
+    @XmlTransient
+    public List<FormulaMateria> getMaterias() {
+        return materias;
     }
 
-    public void setDescripcion(String descripcion) {
-        this.descripcion = descripcion;
+    public void setMaterias(List<FormulaMateria> materias) {
+        this.materias = materias;
     }
 
+    public Producto getProducto() {
+        return producto;
+    }
 
+    public void setProducto(Producto producto) {
+        this.producto = producto;
+    }
 
     @Override
     public int hashCode() {
@@ -78,10 +88,10 @@ public class UnidadMedida implements Serializable {
     @Override
     public boolean equals(Object object) {
         // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof UnidadMedida)) {
+        if (!(object instanceof FormulaProducto)) {
             return false;
         }
-        UnidadMedida other = (UnidadMedida) object;
+        FormulaProducto other = (FormulaProducto) object;
         if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
             return false;
         }
@@ -90,7 +100,7 @@ public class UnidadMedida implements Serializable {
 
     @Override
     public String toString() {
-        return "com.se.entidades.UnidadMedida[ idunidadMedida=" + id + " ]";
+        return "com.se.entidades.FormulaProducto[ idformulaProducto=" + id + " ]";
     }
     
 }

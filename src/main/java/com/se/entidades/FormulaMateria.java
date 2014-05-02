@@ -7,9 +7,8 @@
 package com.se.entidades;
 
 import java.io.Serializable;
-import java.util.List;
+import java.math.BigDecimal;
 import javax.persistence.Basic;
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -19,48 +18,48 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
  * @author Willian
  */
 @Entity
-@Table(name = "materia_prima")
+@Table(name = "formula_materia")
 @XmlRootElement
 @NamedQueries({
-    @NamedQuery(name = "MateriaPrima.findAll", query = "SELECT m FROM MateriaPrima m")})
-public class MateriaPrima implements Serializable {
+    @NamedQuery(name = "FormulaMateria.findAll", query = "SELECT f FROM FormulaMateria f")})
+public class FormulaMateria implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
-    @Column(name = "idmateria_prima")
+    @Column(name = "idformula_materia")
     private Integer id;
+    // @Max(value=?)  @Min(value=?)//if you know range of your decimal fields consider using these annotations to enforce field validation
     @Basic(optional = false)
     @NotNull
-    @Size(min = 1, max = 45)
-    @Column(name = "descripcion")
-    private String descripcion;
-    @JoinColumn(name = "idunidad_medida", referencedColumnName = "idunidad_medida")
+    @Column(name = "cantidad")
+    private BigDecimal cantidad;
+    @JoinColumn(name = "id_materia", referencedColumnName = "idmateria_prima")
     @ManyToOne(optional = false)
-    private UnidadMedida idunidadMedida;
+    private MateriaPrima materiaPrima;
+    @JoinColumn(name = "id_formula", referencedColumnName = "idformula_producto")
+    @ManyToOne(optional = false)
+    private FormulaProducto formula;
 
-    public MateriaPrima() {
+    public FormulaMateria() {
     }
 
-    public MateriaPrima(Integer idmateriaPrima) {
-        this.id = idmateriaPrima;
+    public FormulaMateria(Integer idformulaMateria) {
+        this.id = idformulaMateria;
     }
 
-    public MateriaPrima(Integer idmateriaPrima, String descripcion) {
-        this.id = idmateriaPrima;
-        this.descripcion = descripcion;
+    public FormulaMateria(Integer idformulaMateria, BigDecimal cantidad) {
+        this.id = idformulaMateria;
+        this.cantidad = cantidad;
     }
 
     public Integer getId() {
@@ -71,19 +70,28 @@ public class MateriaPrima implements Serializable {
         this.id = id;
     }
 
-    public String getDescripcion() {
-        return descripcion;
+    public BigDecimal getCantidad() {
+        return cantidad;
     }
 
-    public void setDescripcion(String descripcion) {
-        this.descripcion = descripcion;
-    }
-    public UnidadMedida getIdunidadMedida() {
-        return idunidadMedida;
+    public void setCantidad(BigDecimal cantidad) {
+        this.cantidad = cantidad;
     }
 
-    public void setIdunidadMedida(UnidadMedida idunidadMedida) {
-        this.idunidadMedida = idunidadMedida;
+    public MateriaPrima getMateriaPrima() {
+        return materiaPrima;
+    }
+
+    public void setMateriaPrima(MateriaPrima materiaPrima) {
+        this.materiaPrima = materiaPrima;
+    }
+
+    public FormulaProducto getFormula() {
+        return formula;
+    }
+
+    public void setFormula(FormulaProducto formula) {
+        this.formula = formula;
     }
 
     @Override
@@ -96,10 +104,10 @@ public class MateriaPrima implements Serializable {
     @Override
     public boolean equals(Object object) {
         // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof MateriaPrima)) {
+        if (!(object instanceof FormulaMateria)) {
             return false;
         }
-        MateriaPrima other = (MateriaPrima) object;
+        FormulaMateria other = (FormulaMateria) object;
         if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
             return false;
         }
@@ -108,7 +116,7 @@ public class MateriaPrima implements Serializable {
 
     @Override
     public String toString() {
-        return "com.se.entidades.MateriaPrima[ idmateriaPrima=" + id + " ]";
+        return "com.se.entidades.FormulaMateria[ idformulaMateria=" + id + " ]";
     }
     
 }

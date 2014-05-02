@@ -7,6 +7,10 @@
 package com.se.web;
 
 import com.se.entidades.MateriaPrima;
+import com.se.entidades.Producto;
+import com.se.sesion.ProductoFacadeLocal;
+import java.util.List;
+import javax.ejb.EJB;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -20,6 +24,9 @@ import org.springframework.web.bind.annotation.ResponseBody;
  */
 @Controller
 public class HolaControlador {
+    @EJB(mappedName = "java:global/SE/ProductoFacade")
+    private ProductoFacadeLocal productoFacade;
+    
     @RequestMapping(value = "/hola", method = RequestMethod.GET)
     public String hola(){
         return "hola";
@@ -36,6 +43,12 @@ public class HolaControlador {
     public MateriaPrima responder(){
         MateriaPrima materiaPrima = new MateriaPrima(1, "Descripcion");
         return materiaPrima;
+    }
+    
+    @RequestMapping(value = "/listaProductos",produces = "application/json")
+    @ResponseBody
+    public List<Producto> listarProducto(){
+        return productoFacade.findAll();
     }
     
 }
